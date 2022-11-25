@@ -5,10 +5,13 @@ Process::Process(const wchar_t* processName) {
 	pName = processName;
 	pId = 0;
 	pHandle = NULL;
+	baseAddress = NULL;
 }
 
 Process::~Process() {
-	CloseHandle(pHandle);
+	if (pHandle != NULL && pHandle != INVALID_HANDLE_VALUE) {
+		CloseHandle(pHandle);
+	}
 }
 
 bool Process::attachToProcess()
@@ -26,6 +29,9 @@ bool Process::attachToProcess()
 		//std::cout << "FAILED TO OPEN HANDLE TO PROCCESS" << std::endl;
 		return false;
 	}
+
+	// Get Module (Process) Base Address
+	baseAddress = GetModuleBaseAddress(pId, pName);
 
 	return true;
 }
@@ -77,11 +83,11 @@ unsigned int Process::GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
 	return modBaseAddr;
 }
 
-unsigned int Process::FindDMAAddress(HANDLE h, unsigned int ptr, std::vector<unsigned int> offsets)
+unsigned int Process::FindDMAAddress(unsigned int ptr, std::vector<unsigned int> offsets)
 {
 	unsigned int addr = ptr;
 	for (unsigned int i = 0; i < offsets.size(); ++i) {
-		ReadProcessMemory(h, (BYTE*)addr, &addr, sizeof(addr), 0);
+		ReadProcessMemory(pHandle, (BYTE*)addr, &addr, sizeof(addr), 0);
 		addr += offsets[i];
 	}
 	return addr;

@@ -145,7 +145,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memory.cpp" />
-    <ClCompile Include="offsets.cpp" />
+    <ClCompile Include="offsets.h" />
     <ClCompile Include="Process.cpp" />
   </ItemGroup>
   <ItemGroup>

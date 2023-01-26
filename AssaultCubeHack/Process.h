@@ -6,6 +6,7 @@
 
 class Process {
 public:
+	bool status;
 	const wchar_t* pName;
 	DWORD pId;
 	HANDLE pHandle;

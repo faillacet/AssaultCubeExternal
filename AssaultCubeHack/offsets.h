@@ -1,7 +1,5 @@
 #pragma once
 
-struct Vector3 { float x, y, z; };
-
 struct {
 
 	unsigned int recoilFunc = 0xC8BA0;

@@ -6,6 +6,9 @@ Process::Process(const wchar_t* processName) {
 	pId = 0;
 	pHandle = NULL;
 	baseAddress = NULL;
+
+	// Attempt Attach
+	status = attachToProcess();
 }
 
 Process::~Process() {

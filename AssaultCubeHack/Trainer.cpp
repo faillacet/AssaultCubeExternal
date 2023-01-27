@@ -52,26 +52,31 @@ void Trainer::getKeyState() {
 	// Del Key - EXIT
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		bExit = true;
+		bWinUpdate = true;
 	}
 
 	// Home Key - HEALTH HACK
 	if (GetAsyncKeyState(VK_HOME) & 1) {
 		bHealth = !bHealth;
+		bWinUpdate = true;
 	}
 
 	// Page Up Key - AMMO HACK
 	if (GetAsyncKeyState(VK_PRIOR) & 1) {
 		bAmmo = !bAmmo;
+		bWinUpdate = true;
 	}
 
 	// Page Down Key - FIRERATE HACK
 	if (GetAsyncKeyState(VK_NEXT) & 1) {
 		bFirerate = !bFirerate;
+		bWinUpdate = true;
 	}
 
 	// Right Arrow Key - NO RECOIL / SPREAD / KICKBACK
 	if (GetAsyncKeyState(VK_RIGHT) & 1) {
 		bRecoil = !bRecoil;
+		bWinUpdate = true;
 	}
 }
 
@@ -98,15 +103,31 @@ void Trainer::executeFeatures() {
 		WriteProcessMemory(tProc->pHandle, (BYTE*)localAddr.recoilFunc, &noRecoilOP, sizeof(noRecoilOP), nullptr);
 		bRecoilRe = true;
 	}
-	else if ((!bRecoil && bRecoilRe) || bExit) {
+	else if ((!bRecoil || bExit) && bRecoilRe) {
 		// replace w/ old value
 		WriteProcessMemory(tProc->pHandle, (BYTE*)localAddr.recoilFunc, &oldRecoilOP, sizeof(oldRecoilOP), nullptr);
 		bRecoilRe = false;
 	}
-
-	Sleep(5);
 }
 
 bool Trainer::getExitStatus() {
 	return bExit;
+}
+
+bool Trainer::getUpdateFlag() {
+	return bWinUpdate;
+}
+
+void Trainer::setUpdateFlag(bool x) {
+	bWinUpdate = x;
+}
+
+void Trainer::TESTFUNC() {
+	unsigned int entListPtr = localAddr.moduleBase + OFS.entityList;
+	unsigned int entAddr = tProc->FindDMAAddress(entListPtr, { 4 });
+	PlayerEnt* pEnt = new PlayerEnt(entAddr, tProc);
+	//std::cout << std::hex << entAddr << std::endl;
+	pEnt->resolveAddresses();
+	pEnt->getAllData();
+	std::cout << pEnt->health << std::endl;
 }

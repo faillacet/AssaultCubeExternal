@@ -13,19 +13,26 @@ int main() {
 	// Create Trainer (Hack)
 	Trainer* Hack = new Trainer(tProc);
 
+	Hack->TESTFUNC();
+
 	// Create Display Window
 	Hack->setWindow();
+	//Hack->printToWindow();
 
 	// Main Loop
 	while (!Hack->getExitStatus()) {
-		// Updates
-		Hack->updateAddresses();
-		//Hack->updateGameData();
-		Hack->getKeyState();
-		Hack->printToWindow();
 
-		// Features - Probably add function for aimbot
+		Hack->updateAddresses();
+		Hack->getKeyState();
+
+		if (Hack->getUpdateFlag()) {
+			Hack->printToWindow();
+			Hack->setUpdateFlag(false);
+		}
+
 		Hack->executeFeatures();
+
+		Sleep(5);
 	}
 
 	delete Hack;

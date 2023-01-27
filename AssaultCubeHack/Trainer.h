@@ -5,13 +5,13 @@
 #include <iostream>
 #include "Process.h"
 #include "offsets.h"
+#include "aimbot.h"
 
 // Globals
 const unsigned int newVal = 1337;
 const unsigned int zero = 0;
 
 struct {
-	// Important
 	unsigned int moduleBase;
 	unsigned int playerPtr;
 	unsigned int recoilFunc;
@@ -27,6 +27,7 @@ private:
 	Process* tProc;
 
 	// KEY STATES
+	bool bWinUpdate = false;
 	bool bExit = false;
 	bool bHealth = false;
 	bool bAmmo = false;
@@ -39,23 +40,24 @@ private:
 	std::array<BYTE, 3> noRecoilOP = { 0xC2, 0x08, 0x00 };
 
 public:
-
 	
-
+	
+	// Functions -------------
 	Trainer(Process* procPtr);
 	~Trainer();
 	void initAddresses();
 
-	// Menu
 	const char* boolToString(bool x);
 	void setWindow();
 	void printToWindow();
 
-	// Loop Updates
 	void updateAddresses();
-	void updateGameData();
-	void getKeyState();
+	//void updateGameData();
 	void executeFeatures();
+	void getKeyState();
 	bool getExitStatus();
+	bool getUpdateFlag();
+	void setUpdateFlag(bool x);
 
+	void TESTFUNC();
 };

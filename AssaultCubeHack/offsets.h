@@ -3,7 +3,11 @@
 struct {
 
 	unsigned int recoilFunc = 0xC8BA0;
+	unsigned int playerCount = 0x18AC0C;
+	unsigned int entityList = 0x18AC04; // first entity at + 4
 	unsigned int playerent = 0x18AC00;
+	
+
 	// offsets relative to playerent
 	struct {
 		unsigned int headPosX = 0x4;

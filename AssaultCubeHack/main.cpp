@@ -10,14 +10,12 @@ int main() {
 		return 0;
 	}
 
-	// Create Trainer (Hack)
+	// Create Trainer
 	Trainer* Hack = new Trainer(tProc);
-
-	Hack->TESTFUNC();
 
 	// Create Display Window
 	Hack->setWindow();
-	//Hack->printToWindow();
+	Hack->printToWindow();
 
 	// Main Loop
 	while (!Hack->getExitStatus()) {
@@ -32,7 +30,7 @@ int main() {
 
 		Hack->executeFeatures();
 
-		Sleep(5);
+		Sleep(1);
 	}
 
 	delete Hack;

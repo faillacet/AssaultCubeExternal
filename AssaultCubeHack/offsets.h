@@ -21,6 +21,7 @@ struct {
 		unsigned int viewZ = 0x3C;
 		unsigned int health = 0xEC;
 		unsigned int armor = 0xF0;
+		unsigned int isDead = 0x318; // 0 - alive, 1 - dead
 
 		unsigned int currWepPtr = 0x364;
 		// offsets relative to currWepPtr

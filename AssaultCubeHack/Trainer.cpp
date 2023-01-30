@@ -32,7 +32,8 @@ void Trainer::printToWindow() {
 		<< "[Home] - Godmode                " << boolToString(bHealth) << "\n"
 		<< "[PgUp] - InfiniteAmmo           " << boolToString(bAmmo) << "\n"
 		<< "[PgDn] - FireRate               " << boolToString(bFirerate) << "\n"
-		<< "[RArr] - No Recoil              " << boolToString(bRecoil) << std::endl;
+		<< "[RArr] - No Recoil              " << boolToString(bRecoil) << "\n"
+		<< "[DArr] - Aimbot                 " << boolToString(bAimbot) << std::endl;
 }
 
 void Trainer::initAddresses() {
@@ -78,6 +79,17 @@ void Trainer::getKeyState() {
 		bRecoil = !bRecoil;
 		bWinUpdate = true;
 	}
+
+	if (GetAsyncKeyState(VK_DOWN) & 1) {
+		bAimbot = !bAimbot;
+		bWinUpdate = true;
+		if (bAimbot) {
+			initAimbot();
+		}
+		else {
+			deleteAimbot();
+		}
+	}
 }
 
 void Trainer::executeFeatures() {
@@ -108,6 +120,11 @@ void Trainer::executeFeatures() {
 		WriteProcessMemory(tProc->pHandle, (BYTE*)localAddr.recoilFunc, &oldRecoilOP, sizeof(oldRecoilOP), nullptr);
 		bRecoilRe = false;
 	}
+
+	// Basic Aimbot
+	if (bAimbot) {
+		executeAimbot();
+	}
 }
 
 bool Trainer::getExitStatus() {
@@ -122,12 +139,16 @@ void Trainer::setUpdateFlag(bool x) {
 	bWinUpdate = x;
 }
 
-void Trainer::TESTFUNC() {
-	unsigned int entListPtr = localAddr.moduleBase + OFS.entityList;
-	unsigned int entAddr = tProc->FindDMAAddress(entListPtr, { 4 });
-	PlayerEnt* pEnt = new PlayerEnt(entAddr, tProc);
-	//std::cout << std::hex << entAddr << std::endl;
-	pEnt->resolveAddresses();
-	pEnt->getAllData();
-	std::cout << pEnt->health << std::endl;
+void Trainer::initAimbot() {
+	aimbot = new Aimbot(localAddr.moduleBase, tProc);
+}
+
+void Trainer::executeAimbot() {
+	aimbot->aimLoop();
+}
+
+void Trainer::deleteAimbot() {
+	if (aimbot != nullptr) {
+		delete aimbot;
+	}
 }

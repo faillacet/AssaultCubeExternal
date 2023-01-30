@@ -5,7 +5,13 @@
 #include "Process.h"
 #include "offsets.h"
 
-struct Vector3 { float x, y, z; };
+class Vector3 { 
+public:
+	float x, y, z; 
+
+	Vector3();
+	Vector3(float x, float y, float z);
+};
 
 struct playerAddresses {
 	unsigned int headPosX, headPosY, headPosZ;
@@ -13,6 +19,17 @@ struct playerAddresses {
 	unsigned int viewX, viewY, viewZ;
 	unsigned int health;
 	unsigned int armor;
+	unsigned int isDead;
+};
+
+// TODO MIGRATE TO VALUES IN A STRUCT AS WELL (makes things cleaner)
+struct playerValues {
+	Vector3 headPos;
+	Vector3 bodyPos;
+	Vector3 view;
+	unsigned int health;
+	unsigned int armor;
+	bool isDead;
 };
 
 class PlayerEnt
@@ -27,6 +44,7 @@ public:
 	Vector3 view; //0x0034
 	unsigned int health; //0x00EC
 	unsigned int armor; //0x00F0
+	bool isDead; // 0 is alive, 1 is dead
 	//char* name[15]; // 0x205
 
 	// Functions
@@ -38,9 +56,36 @@ public:
 	//void getName();
 };
 
+#define PI 3.1415927f
+
 class Aimbot {
 public:
-	bool enabled;
+	Process* proc;
+	unsigned int modBaseAddr;
+	unsigned int playerCountAddr;
+	unsigned int entListAddr;	// First entity is at + 4
 
-	//void resolveAddresses(PlayerEnt[] );
+	PlayerEnt** entArr;
+	PlayerEnt* localPlayer;
+
+	unsigned int playerCount;
+
+	// Setup
+	Aimbot(unsigned int modBase, Process* proc);
+	~Aimbot();
+	void getPlayerCount();
+	void createEntityList();
+	void deleteEntityList();
+
+	// Math Calcs
+	float getDistance(Vector3 other);
+	float magnitude(Vector3 src);
+	float distance(Vector3 src, Vector3 dst);
+	Vector3 vecSub(Vector3 src, Vector3 dst);
+	Vector3 calcAngle(Vector3 src, Vector3 dst);
+	PlayerEnt* getClosestEnemy();
+
+	// Loop
+	void aimLoop();
+	void aimAt(Vector3 targetPos);
 };

@@ -24,7 +24,8 @@ struct {
 
 class Trainer {
 private:
-	Process* tProc;
+	Process* tProc = nullptr;
+	Aimbot* aimbot = nullptr;
 
 	// KEY STATES
 	bool bWinUpdate = false;
@@ -34,6 +35,7 @@ private:
 	bool bFirerate = false;
 	bool bRecoil = false;
 	bool bRecoilRe = false;
+	bool bAimbot = false;
 
 	// OP Code / Buffers
 	std::array<BYTE, 3> oldRecoilOP = { 0x00, 0x00, 0x00 };
@@ -59,5 +61,7 @@ public:
 	bool getUpdateFlag();
 	void setUpdateFlag(bool x);
 
-	void TESTFUNC();
+	void initAimbot();
+	void executeAimbot();
+	void deleteAimbot();
 };

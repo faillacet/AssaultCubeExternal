@@ -22,6 +22,7 @@ PlayerEnt::~PlayerEnt() {
 void PlayerEnt::resolveAddresses() {
 	pAddr.health = proc->FindDMAAddress(playerEntPtr, { OFS.playerentOFS.health });
 	pAddr.armor = proc->FindDMAAddress(playerEntPtr, { OFS.playerentOFS.armor });
+	pAddr.team = proc->FindDMAAddress(playerEntPtr, { OFS.playerentOFS.team });
 	pAddr.isDead = proc->FindDMAAddress(playerEntPtr, { OFS.playerentOFS.isDead });
 
 	pAddr.headPosX = proc->FindDMAAddress(playerEntPtr, { OFS.playerentOFS.headPosX });
@@ -40,6 +41,7 @@ void PlayerEnt::resolveAddresses() {
 void PlayerEnt::getAllData() {
 	ReadProcessMemory(proc->pHandle, (BYTE*)pAddr.health, (BYTE*)&health, sizeof(health), nullptr);
 	ReadProcessMemory(proc->pHandle, (BYTE*)pAddr.armor, (BYTE*)&armor, sizeof(armor), nullptr);
+	ReadProcessMemory(proc->pHandle, (BYTE*)pAddr.team, (BYTE*)&team, sizeof(team), nullptr);
 	ReadProcessMemory(proc->pHandle, (BYTE*)pAddr.isDead, (BYTE*)&isDead, sizeof(isDead), nullptr);
 
 	// Vector3s
@@ -65,11 +67,12 @@ Aimbot::Aimbot(unsigned int modBase, Process* procPtr) {
 
 	localPlayer = new PlayerEnt(modBase + OFS.playerent, proc);
 	localPlayer->resolveAddresses();
+	localPlayer->getAllData();
 
-	getPlayerCount();
 	unsigned int entListPtr = modBaseAddr + OFS.entityList;
 	entListAddr = proc->FindDMAAddress(entListPtr, { 0 });
-	entArr = nullptr;
+
+	getPlayerCount();
 	createEntityList();
 }
 
@@ -93,28 +96,43 @@ void Aimbot::createEntityList() {
 		entArr[i-1] = new PlayerEnt(entListAddr + (4 * i), proc);
 		entArr[i-1]->resolveAddresses();
 		entArr[i-1]->getAllData();
-		std::cout << entArr[i-1]->health << std::endl;
 	}
+
+	enemyArr = new PlayerEnt*[playerCount/2];
+	int iter = 0;
+	for (unsigned int i = 0; i < playerCount - 1; i++) {
+		if (entArr[i]->team != localPlayer->team) {
+			enemyArr[iter] = entArr[i];
+			iter++;
+		}
+	}
+	std::cout << "DONE" << std::endl;
 }
 
 void Aimbot::deleteEntityList() {
 	for (unsigned int i = 1; i < playerCount; i++) {
 		delete entArr[i-1];
 	}
+
 	delete[] entArr;
 	entArr = nullptr;
+
+	delete[] enemyArr;
+	enemyArr = nullptr;
 }
 
 void Aimbot::aimLoop() {
 	// Update all Data
 	localPlayer->getAllData();
-	for (unsigned int i = 0; i < playerCount - 1; i++) {
-		entArr[i]->getAllData();
+	for (unsigned int i = 0; i < playerCount / 2; i++) {
+		enemyArr[i]->getAllData();
 	}
 
 	// get closest enemy, then aim at them
 	PlayerEnt* closestEnemy = getClosestEnemy();
-	aimAt(closestEnemy->headPos);
+	if (closestEnemy != nullptr) {
+		aimAt(closestEnemy->headPos);
+	}
 }
 
 void Aimbot::aimAt(Vector3 targetPos) {
@@ -153,16 +171,16 @@ Vector3 Aimbot::calcAngle(Vector3 src, Vector3 dst) {
 }
 
 PlayerEnt* Aimbot::getClosestEnemy() {
-	float minDist = 9999999.0f;
+	float minDist = 999999.0f;
 	PlayerEnt* curr = nullptr;
-	for (unsigned int i = 0; i < playerCount - 1; i++) {
-		if (entArr[i]->isDead) {
+	for (unsigned int i = 0; i < playerCount / 2; i++) {
+		if (enemyArr[i]->isDead) {
 			continue;
 		}
-		float dist = getDistance(entArr[i]->headPos);
+		float dist = getDistance(enemyArr[i]->headPos);
 		if (dist < minDist) {
 			minDist = dist;
-			curr = entArr[i];
+			curr = enemyArr[i];
 		}
 	}
 	return curr;

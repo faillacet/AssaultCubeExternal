@@ -6,7 +6,9 @@ Trainer::Trainer(Process* procPtr) {
 }
 
 Trainer::~Trainer() {
-
+	if (aimbot != nullptr) {
+		deleteAimbot();
+	}
 }
 
 const char* Trainer::boolToString(bool x) {
@@ -151,4 +153,5 @@ void Trainer::deleteAimbot() {
 	if (aimbot != nullptr) {
 		delete aimbot;
 	}
+	aimbot = nullptr;
 }

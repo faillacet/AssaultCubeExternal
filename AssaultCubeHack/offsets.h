@@ -22,6 +22,7 @@ struct {
 		unsigned int health = 0xEC;
 		unsigned int armor = 0xF0;
 		unsigned int isDead = 0x318; // 0 - alive, 1 - dead
+		unsigned int team = 0x30C;	// single byte
 
 		unsigned int currWepPtr = 0x364;
 		// offsets relative to currWepPtr

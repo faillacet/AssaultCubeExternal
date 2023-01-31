@@ -19,6 +19,7 @@ struct playerAddresses {
 	unsigned int viewX, viewY, viewZ;
 	unsigned int health;
 	unsigned int armor;
+	unsigned int team;
 	unsigned int isDead;
 };
 
@@ -29,6 +30,7 @@ struct playerValues {
 	Vector3 view;
 	unsigned int health;
 	unsigned int armor;
+	unsigned int team;
 	bool isDead;
 };
 
@@ -44,6 +46,7 @@ public:
 	Vector3 view; //0x0034
 	unsigned int health; //0x00EC
 	unsigned int armor; //0x00F0
+	unsigned int team;
 	bool isDead; // 0 is alive, 1 is dead
 	//char* name[15]; // 0x205
 
@@ -65,8 +68,9 @@ public:
 	unsigned int playerCountAddr;
 	unsigned int entListAddr;	// First entity is at + 4
 
-	PlayerEnt** entArr;
-	PlayerEnt* localPlayer;
+	PlayerEnt** entArr = nullptr;
+	PlayerEnt** enemyArr = nullptr;
+	PlayerEnt* localPlayer = nullptr;
 
 	unsigned int playerCount;
 

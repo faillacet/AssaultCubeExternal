@@ -86,11 +86,9 @@ unsigned int Process::GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
 	return modBaseAddr;
 }
 
-unsigned int Process::FindDMAAddress(unsigned int ptr, std::vector<unsigned int> offsets)
-{
-	unsigned int addr = ptr;
+uintptr_t Process::parseDMAAddr(uintptr_t addr, std::vector<uintptr_t> offsets) {
 	for (unsigned int i = 0; i < offsets.size(); ++i) {
-		ReadProcessMemory(pHandle, (BYTE*)addr, &addr, sizeof(addr), 0);
+		ReadProcessMemory(pHandle, (byte*)addr, &addr, sizeof(unsigned int), nullptr);
 		addr += offsets[i];
 	}
 	return addr;

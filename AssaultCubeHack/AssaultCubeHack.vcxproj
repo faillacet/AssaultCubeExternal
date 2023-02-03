@@ -143,18 +143,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aimbot.cpp" />
+    <ClCompile Include="aMath.cpp" />
+    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="hack.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="offsets.h" />
     <ClCompile Include="Process.cpp" />
-    <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aimbot.h" />
-    <ClInclude Include="Memory.h" />
+    <ClInclude Include="aMath.h" />
+    <ClInclude Include="entity.h" />
+    <ClInclude Include="hack.h" />
+    <ClInclude Include="includes.h" />
     <ClInclude Include="Process.h" />
-    <ClInclude Include="Trainer.h" />
+    <ClInclude Include="vectors.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

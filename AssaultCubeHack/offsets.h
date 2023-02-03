@@ -1,41 +1,40 @@
 #pragma once
+#include <cstdint>
 
 struct {
-
-	unsigned int recoilFunc = 0xC8BA0;
-	unsigned int playerCount = 0x18AC0C;
-	unsigned int entityList = 0x18AC04; // first entity at + 4
-	unsigned int playerent = 0x18AC00;
-	
+	uintptr_t recoilFunc = 0xC8BA0;
+	uintptr_t playerCount = 0x18AC0C;
+	uintptr_t entityList = 0x18AC04; // first entity at + 4
+	uintptr_t playerent = 0x18AC00;
 
 	// offsets relative to playerent
 	struct {
-		unsigned int headPosX = 0x4;
-		unsigned int headPosY = 0x8;
-		unsigned int headPosZ = 0xC;
-		unsigned int posX = 0x28;
-		unsigned int posY = 0x2C;
-		unsigned int posZ = 0x30;
-		unsigned int viewX = 0x34;
-		unsigned int viewY = 0x38;
-		unsigned int viewZ = 0x3C;
-		unsigned int health = 0xEC;
-		unsigned int armor = 0xF0;
-		unsigned int isDead = 0x318; // 0 - alive, 1 - dead
-		unsigned int team = 0x30C;	// single byte
+		uintptr_t headPosX = 0x4;
+		uintptr_t headPosY = 0x8;
+		uintptr_t headPosZ = 0xC;
+		uintptr_t posX = 0x28;
+		uintptr_t posY = 0x2C;
+		uintptr_t posZ = 0x30;
+		uintptr_t viewX = 0x34;
+		uintptr_t viewY = 0x38;
+		uintptr_t viewZ = 0x3C;
+		uintptr_t health = 0xEC;
+		uintptr_t armor = 0xF0;
+		uintptr_t isDead = 0x318; // 0 - alive, 1 - dead
+		uintptr_t team = 0x30C;	// single byte
 
-		unsigned int currWepPtr = 0x364;
+		uintptr_t currWepPtr = 0x364;
 		// offsets relative to currWepPtr
 		struct {
-			unsigned int id = 0x4;
-			unsigned int ammoReservePtr = 0x10;
-			unsigned int ammoPtr = 0x14;
-			unsigned int delayPtr = 0x18;
-			unsigned int shotsFired = 0x1C;
-			unsigned int weaponObjPtr = 0xC;
+			uintptr_t id = 0x4;
+			uintptr_t ammoReservePtr = 0x10;
+			uintptr_t ammoPtr = 0x14;
+			uintptr_t delayPtr = 0x18;
+			uintptr_t shotsFired = 0x1C;
+			uintptr_t weaponObjPtr = 0xC;
 			// offsets relative to weaponObj
 			struct {
-				unsigned int recoil = 0x60;
+				uintptr_t recoil = 0x60;
 			} weaponObjOFS;
 		} currWepOFS;
 	} playerentOFS;

@@ -1,8 +1,5 @@
 #pragma once
-
-#include <vector>
-#include <Windows.h>
-#include <TlHelp32.h>
+#include "includes.h"
 
 class Process {
 public:
@@ -18,5 +15,6 @@ public:
 	bool attachToProcess();
 	DWORD GetProcId(const wchar_t* procName);
 	unsigned int GetModuleBaseAddress(DWORD procId, const wchar_t* modName);
-	unsigned int FindDMAAddress(unsigned int ptr, std::vector<unsigned int> offsets);
+	uintptr_t parseDMAAddr(uintptr_t addr, std::vector<uintptr_t> offsets);
+	//unsigned int FindDMAAddress(unsigned int ptr, std::vector<unsigned int> offsets);
 };
